@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "nodeId": "N:channel:abc",
+    "packageId": "N:package:2ee844a2-239f-47e7-b7bc-9178682b456c",
+    "name": "Channel 1",
+    "start": 5000,
+    "end": 5500,
+    "unit": "uV",
+    "rate": 10000,
+    "type": "CONTINUOUS",
+    "group": "default",
+    "lastAnnotation": 0,
+    "properties": [],
+    "createdAt": "2019-07-02T13:53:58.220174Z"
+  },
+  {
+    "id": 2,
+    "nodeId": "N:channel:xyz",
+    "packageId": "N:package:2ee844a2-239f-47e7-b7bc-9178682b456c",
+    "name": "Channel 2",
+    "start": 5500,
+    "end": 5600,
+    "unit": "V",
+    "rate": 5000,
+    "type": "CONTINUOUS",
+    "group": "default",
+    "lastAnnotation": 0,
+    "properties": [],
+    "createdAt": "2019-07-02T13:53:58.220174Z"
+  }
+]

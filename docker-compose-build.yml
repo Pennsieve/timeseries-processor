@@ -1,0 +1,132 @@
+version: '3.4'
+
+services:
+  bfts_processor:
+    build:
+      context: .
+      target: prod
+      dockerfile: bfts_processor/Dockerfile
+    container_name: bfts-processor
+    image: pennsieve/bfts-processor:${IMAGE_TAG}
+
+  # feather_processor:
+  #   build:
+  #     context: .
+  #     target: prod
+  #     target: test
+  #     dockerfile: feather_processor/Dockerfile
+  #   container_name: feather-processor
+  #   image: pennsieve/feather-processor:${IMAGE_TAG}
+
+  channel_writer_processor:
+    build:
+      context: .
+      target: prod
+      dockerfile: channel_writer_processor/Dockerfile
+    container_name: channel-writer-processor
+    image: pennsieve/channel-writer-processor:${IMAGE_TAG}
+
+  edf_processor:
+    build:
+      context: .
+      target: prod
+      dockerfile: edf_processor/Dockerfile
+    container_name: edf-processor
+    image: pennsieve/edf-processor:${IMAGE_TAG}
+
+  tdms_processor:
+    build:
+      context: .
+      target: prod
+      dockerfile: tdms_processor/Dockerfile
+    container_name: tdms-processor
+    image: pennsieve/tdms-processor:${IMAGE_TAG}
+
+  nicolet_processor:
+    build:
+      context: .
+      target: prod
+      dockerfile: nicolet_processor/Dockerfile
+    container_name: nicolet-processor
+    image: pennsieve/nicolet-processor:${IMAGE_TAG}
+
+  openephys_processor:
+    build:
+      context: .
+      target: prod
+      dockerfile: openephys_processor/Dockerfile
+    container_name: openephys-processor
+    image: pennsieve/openephys-processor:${IMAGE_TAG}
+
+  persyst_processor:
+    build:
+      context: .
+      target: prod
+      dockerfile: persyst_processor/Dockerfile
+    container_name: persyst-processor
+    image: pennsieve/persyst-processor:${IMAGE_TAG}
+
+  nev_processor:
+    build:
+      context: .
+      target: prod
+      dockerfile: nev_processor/Dockerfile
+      args:
+        - PENNSIEVE_NEXUS_USER
+        - PENNSIEVE_NEXUS_PW
+    container_name: nev-processor
+    image: pennsieve/nev-processor:${IMAGE_TAG}
+
+  mef3_processor:
+    build:
+      context: .
+      target: prod
+      dockerfile: mef3_processor/Dockerfile
+    container_name: mef3-processor
+    image: pennsieve/mef3-processor:${IMAGE_TAG}
+
+  mef2_processor:
+    build:
+      context: .
+      target: prod
+      dockerfile: mef2_processor/Dockerfile
+    container_name: mef2-processor
+    image: pennsieve/mef2-processor:${IMAGE_TAG}
+
+  moberg_processor:
+    build:
+      context: .
+      target: prod
+      dockerfile: moberg_processor/Dockerfile
+    container_name: moberg-processor
+    image: pennsieve/moberg-processor:${IMAGE_TAG}
+
+  nex_processor:
+    build:
+      context: .
+      target: prod
+      dockerfile: nex_processor/Dockerfile
+      args:
+        - PENNSIEVE_NEXUS_USER
+        - PENNSIEVE_NEXUS_PW
+    container_name: nex-processor
+    image: pennsieve/nex-processor:${IMAGE_TAG}
+
+  spike2_processor:
+    build:
+      context: .
+      target: prod
+      dockerfile: spike2_processor/Dockerfile
+      args:
+        - PENNSIEVE_NEXUS_USER
+        - PENNSIEVE_NEXUS_PW
+    container_name: spike2-processor
+    image: pennsieve/spike2-processor:${IMAGE_TAG}
+
+  timeseries_exporter:
+    build:
+      context: .
+      target: prod
+      dockerfile: timeseries_exporter/Dockerfile
+    container_name: timeseries-exporter
+    image: pennsieve/timeseries-exporter:${IMAGE_TAG}

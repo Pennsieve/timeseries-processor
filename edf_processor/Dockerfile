@@ -1,0 +1,39 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# TEST IMAGE
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+FROM pennsieve/base-processor-pandas-test:6-43b7408 as test
+
+# install requirements
+COPY edf_processor/requirements.txt /app/
+RUN  pip install --no-cache-dir -r /app/requirements.txt
+
+# code: processor
+COPY edf_processor/edf_processor   /app/edf_processor
+COPY edf_processor/run.py          /app/run.py
+
+# code: tests
+COPY edf_processor/tests /app/tests
+
+WORKDIR /app
+ENTRYPOINT [""]
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# PRODUCTION IMAGE
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+FROM pennsieve/base-processor-pandas:6-43b7408 as prod
+
+RUN apk add --no-cache --update gcc musl-dev
+
+# install requirements
+COPY edf_processor/requirements.txt /app/
+RUN  pip install --no-cache-dir -r  /app/requirements.txt
+
+# code: processor
+COPY edf_processor/edf_processor  /app/edf_processor
+COPY edf_processor/run.py         /app/run.py
+
+WORKDIR /app
+ENTRYPOINT [""]

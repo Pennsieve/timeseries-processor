@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "nodeId": "N:channel:cce20f27-e062-4231-bc9f-830d0afe6377",
+    "packageId": "N:package:2ee844a2-239f-47e7-b7bc-9178682b456c",
+    "name": "LG19",
+    "start": 946684800000000,
+    "end": 946820915041790,
+    "unit": "uV",
+    "rate": 499.906982421875,
+    "type": "CONTINUOUS",
+    "group": "default",
+    "lastAnnotation": 0,
+    "properties": [],
+    "createdAt": "2019-07-02T13:53:58.220174Z"
+  },
+  {
+    "id": 2,
+    "nodeId": "N:channel:3586c84a-1649-4b8a-b1aa-4a245f5b2fcc",
+    "packageId": "N:package:2ee844a2-239f-47e7-b7bc-9178682b456c",
+    "name": "LG30",
+    "start": 946684800000000,
+    "end": 946820915041790,
+    "unit": "uV",
+    "rate": 499.906982421875,
+    "type": "CONTINUOUS",
+    "group": "default",
+    "lastAnnotation": 0,
+    "properties": [],
+    "createdAt": "2019-07-02T13:54:19.232287Z"
+  },
+  {
+    "id": 3,
+    "nodeId": "N:channel:cf435026-f285-4d44-a175-dbe110602222",
+    "packageId": "N:package:2ee844a2-239f-47e7-b7bc-9178682b456c",
+    "name": "LG21",
+    "start": 946684800000000,
+    "end": 946820915041790,
+    "unit": "uV",
+    "rate": 499.906982421875,
+    "type": "CONTINUOUS",
+    "group": "default",
+    "lastAnnotation": 0,
+    "properties": [],
+    "createdAt": "2019-07-02T13:55:37.556011Z"
+  },
+  {
+    "id": 4,
+    "nodeId": "N:channel:35849cef-92f1-41df-a9b0-24345a1f0eb6",
+    "packageId": "N:package:2ee844a2-239f-47e7-b7bc-9178682b456c",
+    "name": "LG2",
+    "start": 946684800000000,
+    "end": 946820915041790,
+    "unit": "uV",
+    "rate": 499.906982421875,
+    "type": "CONTINUOUS",
+    "group": "default",
+    "lastAnnotation": 0,
+    "properties": [],
+    "createdAt": "2019-07-02T13:55:37.623934Z"
+  }
+]

@@ -1,0 +1,6 @@
+{
+    "files": [
+        "some/path/to/file.tdms"
+    ],
+    "encryptionKeyId": "encryption-key-id"
+}

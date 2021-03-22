@@ -1,0 +1,6 @@
+{
+    "files": [
+        "some/path/to/file.edf"
+    ],
+    "encryptionKeyId": "encryption-key-id"
+}

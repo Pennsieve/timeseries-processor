@@ -1,0 +1,262 @@
+version: '3.4'
+
+services:
+  bfts_processor:
+    build:
+      context: .
+      target: test
+      dockerfile: bfts_processor/Dockerfile
+    container_name: bfts-processor-test
+    command: ["python", "-m", "pytest", "-s", "-x", "--cov-report=", "--cov=bfts_processor", "tests/"]
+    env_file:
+      - bfts_processor/test.env
+    image: pennsieve/bfts-processor:${IMAGE_TAG}
+    volumes:
+      - /tmp/bfts-${TEST_RUN_ID}:/docker_scratch/
+      - ./bfts_processor/tests/resources:/test-resources/
+
+  # feather_processor:
+  #   build:
+  #     context: .
+  #     target: test
+  #     dockerfile: feather_processor/Dockerfile
+  #   container_name: feather-processor-test
+  #   command: ["python", "-m", "pytest", "-s", "-x", "--cov-report=", "--cov=feather_processor", "tests/"]
+  #   env_file:
+  #     - feather_processor/test.env
+  #   image: pennsieve/feather-processor:${IMAGE_TAG}
+  #   volumes:
+  #     - /tmp/feather-${TEST_RUN_ID}:/docker_scratch/
+  #     - ./feather_processor/tests/resources:/test-resources/
+
+  channel_writer_processor:
+    build:
+      context: .
+      target: test
+      dockerfile: channel_writer_processor/Dockerfile
+    container_name: channel-writer-processor-test
+    command: ["bash", "-c", "sleep 5 && python -m pytest -s -x --cov-report= --cov=channel_writer_processor tests/"]
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
+    env_file:
+      - channel_writer_processor/test.env
+    image: pennsieve/channel-writer-processor:${IMAGE_TAG}
+    volumes:
+      - /tmp/writer-${TEST_RUN_ID}:/docker_scratch/
+      - ./channel_writer_processor/tests/resources:/test-resources/
+
+  postgres:
+    hostname: postgres
+    image: pennsieve/pennsievedb:latest
+    expose:
+      - 5432
+    healthcheck:
+      test: ["CMD-SHELL", "psql -U postgres -t postgres -c \"\\d+ timeseries.ranges\""]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
+  edf_processor:
+    build:
+      context: .
+      target: test
+      dockerfile: edf_processor/Dockerfile
+    container_name: edf-processor-test
+    command: ["python", "-m", "pytest", "-s", "-x", "--cov-report=", "--cov=edf_processor", "tests/"]
+    env_file:
+      - edf_processor/test.env
+    image: pennsieve/edf-processor:${IMAGE_TAG}
+    volumes:
+      - /tmp/edf-${TEST_RUN_ID}:/docker_scratch/
+      - ./edf_processor/tests/resources:/test-resources/
+
+  tdms_processor:
+    build:
+      context: .
+      target: test
+      dockerfile: tdms_processor/Dockerfile
+    container_name: tdms-processor-test
+    command: ["python", "-m", "pytest", "-s", "-x", "--cov-report=", "--cov=tdms_processor", "tests/"]
+    env_file:
+      - tdms_processor/test.env
+    image: pennsieve/tdms-processor:${IMAGE_TAG}
+    volumes:
+      - /tmp/tdms-${TEST_RUN_ID}:/docker_scratch/
+      - ./tdms_processor/tests/resources:/test-resources/
+
+  nicolet_processor:
+    build:
+      context: .
+      target: test
+      dockerfile: nicolet_processor/Dockerfile
+    container_name: nicolet-processor-test
+    command: ["python", "-m", "pytest", "-s", "-x", "--cov-report=", "--cov=nicolet_processor", "tests/"]
+    env_file:
+      - nicolet_processor/test.env
+    image: pennsieve/nicolet-processor:${IMAGE_TAG}
+    volumes:
+      - /tmp/nicolet-${TEST_RUN_ID}:/docker_scratch/
+      - ./nicolet_processor/tests/resources:/test-resources/
+
+  openephys_processor:
+    build:
+      context: .
+      target: test
+      dockerfile: openephys_processor/Dockerfile
+    container_name: openephys-processor-test
+    command: ["python", "-m", "pytest", "-s", "-x", "--cov-report=", "--cov=openephys_processor", "tests/"]
+    env_file:
+      - openephys_processor/test.env
+    image: pennsieve/openephys-processor:${IMAGE_TAG}
+    volumes:
+      - /tmp/openephys-${TEST_RUN_ID}:/docker_scratch/
+      - ./openephys_processor/tests/resources:/test-resources/
+
+  persyst_processor:
+    build:
+      context: .
+      target: test
+      dockerfile: persyst_processor/Dockerfile
+    container_name: persyst-processor-test
+    command: ["python", "-m", "pytest", "-s", "-x", "--cov-report=", "--cov=persyst_processor", "tests/"]
+    env_file:
+      - persyst_processor/test.env
+    image: pennsieve/persyst-processor:${IMAGE_TAG}
+    volumes:
+      - /tmp/persyst-${TEST_RUN_ID}:/docker_scratch/
+      - ./persyst_processor/tests/resources:/test-resources/
+
+  nev_processor:
+    build:
+      context: .
+      target: test
+      dockerfile: nev_processor/Dockerfile
+      args:
+        - PENNSIEVE_NEXUS_USER
+        - PENNSIEVE_NEXUS_PW
+    container_name: nev-processor-test
+    command: ["python", "-m", "pytest", "-s", "-x", "--cov-report=", "--cov=nev_processor", "tests/"]
+    env_file:
+      - nev_processor/test.env
+    image: pennsieve/nev-processor:${IMAGE_TAG}
+    volumes:
+      - /tmp/nev-${TEST_RUN_ID}:/docker_scratch/
+      - ./nev_processor/tests/resources:/test-resources/
+
+  mef3_processor:
+    build:
+      context: .
+      target: test
+      dockerfile: mef3_processor/Dockerfile
+    container_name: mef3-processor-test
+    command: ["python", "-m", "pytest", "-s", "-x", "--cov-report=", "--cov=mef3_processor", "tests/"]
+    env_file:
+      - mef3_processor/test.env
+    image: pennsieve/mef3-processor:${IMAGE_TAG}
+    volumes:
+      - /tmp/mef3-${TEST_RUN_ID}:/docker_scratch/
+      - ./mef3_processor/tests/resources:/test-resources/
+
+  mef2_processor:
+    build:
+      context: .
+      target: test
+      dockerfile: mef2_processor/Dockerfile
+    container_name: mef2-processor-test
+    command: ["python", "-m", "pytest", "-s", "-x", "--cov-report=", "--cov=mef2_processor", "tests/"]
+    env_file:
+      - mef2_processor/test.env
+    image: pennsieve/mef2-processor:${IMAGE_TAG}
+    volumes:
+      - /tmp/mef2-${TEST_RUN_ID}:/docker_scratch/
+      - ./mef2_processor/tests/resources:/test-resources/
+
+  moberg_processor:
+    build:
+      context: .
+      target: test
+      dockerfile: moberg_processor/Dockerfile
+    container_name: moberg-processor-test
+    command: ["python", "-m", "pytest", "-s", "-x", "--cov-report=", "--cov=moberg_processor", "tests/"]
+    env_file:
+      - moberg_processor/test.env
+    image: pennsieve/moberg-processor:${IMAGE_TAG}
+    volumes:
+      - /tmp/moberg-${TEST_RUN_ID}:/docker_scratch/
+      - ./moberg_processor/tests/resources:/test-resources/
+
+  nex_processor:
+    build:
+      context: .
+      target: test
+      dockerfile: nex_processor/Dockerfile
+      args:
+        - PENNSIEVE_NEXUS_USER
+        - PENNSIEVE_NEXUS_PW
+    container_name: nex-processor-test
+    command: ["python", "-m", "pytest", "-s", "-x", "--cov-report=", "--cov=nex_processor", "tests/"]
+    env_file:
+      - nex_processor/test.env
+    image: pennsieve/nex-processor:${IMAGE_TAG}
+    volumes:
+      - /tmp/nex-${TEST_RUN_ID}:/docker_scratch/
+      - ./nex_processor/tests/resources:/test-resources/
+
+  spike2_processor:
+    build:
+      context: .
+      target: test
+      dockerfile: spike2_processor/Dockerfile
+      args:
+        - PENNSIEVE_NEXUS_USER
+        - PENNSIEVE_NEXUS_PW
+    container_name: spike2-processor-test
+    command: ["python", "-m", "pytest", "-s", "-x", "--cov-report=", "--cov=spike2_processor", "tests/"]
+    env_file:
+      - spike2_processor/test.env
+    image: pennsieve/spike2-processor:${IMAGE_TAG}
+    volumes:
+      - /tmp/spike2-${TEST_RUN_ID}:/docker_scratch/
+      - ./spike2_processor/tests/resources:/test-resources/
+
+  timeseries_db:
+    build:
+      context: .
+      target: test
+      dockerfile: timeseries_db/Dockerfile
+    container_name: timeseries-db-test
+    command: ["bash", "-c", "sleep 5 && python -m pytest -s -x --cov-report= --cov=timeseries_db tests/"]
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    env_file:
+      - timeseries_db/test.env
+    image: pennsieve/timeseries_db:${IMAGE_TAG}
+    volumes:
+      - /tmp/writer-${TEST_RUN_ID}:/docker_scratch/
+      - ./timeseries_db/tests/resources:/test-resources/
+
+  timeseries_exporter:
+    build:
+      context: .
+      target: test
+      dockerfile: timeseries_exporter/Dockerfile
+    container_name: timeseries-exporter-test
+    command: ["python", "-m", "pytest", "-s", "-x", "--cov-report=", "--cov=timeseries_exporter", "tests/"]
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    env_file:
+      - timeseries_exporter/test.env
+    image: pennsieve/timeseries-exporter:${IMAGE_TAG}
+    volumes:
+      - /tmp/exporter-${TEST_RUN_ID}:/docker_scratch
+      - ./timeseries_exporter/tests/resources:/test-resources/

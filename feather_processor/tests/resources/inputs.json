@@ -1,0 +1,6 @@
+{
+    "files": [
+        "some/path/to/file.feather"
+    ],
+    "encryptionKeyId": "encryption-key-id"
+}
