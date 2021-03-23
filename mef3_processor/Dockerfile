@@ -2,7 +2,7 @@
 # TEST IMAGE
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-FROM pennsieve/base-processor-ubuntu-test:6-43b7408 as test
+FROM pennsieve/base-processor-ubuntu-test:1-5800e81 as test
 
 # install requirements
 COPY mef3_processor/requirements.txt /app/
@@ -37,7 +37,7 @@ ENTRYPOINT [""]
 # PRODUCTION IMAGE
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-FROM pennsieve/base-processor-ubuntu:81-86b6e41 as prod
+FROM pennsieve/base-processor-ubuntu:1-5800e81 as prod
 
 COPY --from=test /usr/local/lib/python2.7/site-packages/Cython                             /usr/local/lib/python2.7/site-packages/
 COPY --from=test /usr/local/lib/python2.7/site-packages/cython.py                          /usr/local/lib/python2.7/site-packages/

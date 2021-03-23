@@ -2,7 +2,7 @@
 # TEST IMAGE BUILDER (WITH NEXUS CREDENTIALS)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-FROM pennsieve/base-processor-pandas-test:6-43b7408 as test-builder
+FROM pennsieve/base-processor-pandas-test:1-5800e81 as test-builder
 
 ARG PENNSIEVE_NEXUS_USER
 ARG PENNSIEVE_NEXUS_PW
@@ -25,7 +25,7 @@ COPY spike2_processor/tests /app/tests
 # TEST IMAGE
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-FROM pennsieve/base-processor-pandas-test:6-43b7408 as test
+FROM pennsieve/base-processor-pandas-test:1-5800e81 as test
 
 COPY --from=test-builder /app /app
 COPY --from=test-builder /root/.local /root/.local
@@ -38,7 +38,7 @@ ENTRYPOINT [""]
 # PRODUCTION IMAGE BUILDER (WITH NEXUS CREDENTIALS)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-FROM pennsieve/base-processor-pandas:82-1f67edb as prod-builder
+FROM pennsieve/base-processor-pandas:1-5800e81 as prod-builder
 
 ARG PENNSIEVE_NEXUS_USER
 ARG PENNSIEVE_NEXUS_PW
@@ -58,7 +58,7 @@ COPY spike2_processor/run.py         /app/run.py
 # PRODUCTION IMAGE
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-FROM pennsieve/base-processor-pandas:82-1f67edb as prod
+FROM pennsieve/base-processor-pandas:1-5800e81 as prod
 
 COPY --from=prod-builder /app /app
 COPY --from=prod-builder /root/.local /root/.local
