@@ -12,7 +12,7 @@ COPY spike2_processor/requirements.txt /app/
 RUN  pip install --no-cache-dir -r /app/requirements.txt
 
 # install packages from Nexus
-RUN pip install --user --extra-index-url "https://$PENNSIEVE_NEXUS_USER:$PENNSIEVE_NEXUS_PW@nexus.pennsieve.cc/repository/pypi-prod/simple" neo-pennsieve==0.5.1
+RUN pip install --user --extra-index-url "https://$PENNSIEVE_NEXUS_USER:$PENNSIEVE_NEXUS_PW@nexus.pennsieve.cc/repository/pypi-prod/simple" neo==0.5.1
 
 # code: processor
 COPY spike2_processor/spike2_processor  /app/spike2_processor
@@ -48,7 +48,7 @@ COPY spike2_processor/requirements.txt /app/
 RUN  pip install --no-cache-dir -r /app/requirements.txt
 
 # install packages from Nexus
-RUN pip install --user --extra-index-url "https://$PENNSIEVE_NEXUS_USER:$PENNSIEVE_NEXUS_PW@nexus.pennsieve.cc/repository/pypi-prod/simple" neo-pennsieve==0.5.1
+RUN pip install --user --extra-index-url "https://$PENNSIEVE_NEXUS_USER:$PENNSIEVE_NEXUS_PW@nexus.pennsieve.cc/repository/pypi-prod/simple" neo==0.5.1
 
 # code: processor
 COPY spike2_processor/spike2_processor  /app/spike2_processor

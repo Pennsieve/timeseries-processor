@@ -12,7 +12,7 @@ COPY nev_processor/requirements.txt /app/
 RUN  pip install --no-cache-dir -r /app/requirements.txt
 
 # install packages from Nexus
-RUN pip install --extra-index-url "https://$PENNSIEVE_NEXUS_USER:$PENNSIEVE_NEXUS_PW@nexus.pennsieve.cc/repository/pypi-prod/simple" neo-pennsieve==0.5.1
+RUN pip install --extra-index-url "https://$PENNSIEVE_NEXUS_USER:$PENNSIEVE_NEXUS_PW@nexus.pennsieve.cc/repository/pypi-prod/simple" neo==0.5.1
 
 # TODO: add changes to nexus release
 COPY nev_processor/nev_processor/blackrockio.py /usr/local/lib/python2.7/site-packages/neo/io/blackrockio.py
@@ -50,7 +50,7 @@ COPY nev_processor/requirements.txt /app/
 RUN  pip install --no-cache-dir -r /app/requirements.txt
 
 # install packages from Nexus
-RUN pip install --extra-index-url "https://$PENNSIEVE_NEXUS_USER:$PENNSIEVE_NEXUS_PW@nexus.pennsieve.cc/repository/pypi-prod/simple" neo-pennsieve==0.5.1
+RUN pip install --extra-index-url "https://$PENNSIEVE_NEXUS_USER:$PENNSIEVE_NEXUS_PW@nexus.pennsieve.cc/repository/pypi-prod/simple" neo==0.5.1
 
 # TODO: add changes to nexus release
 COPY nev_processor/nev_processor/blackrockio.py /usr/local/lib/python2.7/site-packages/neo/io/blackrockio.py
