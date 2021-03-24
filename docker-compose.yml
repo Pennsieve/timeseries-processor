@@ -15,7 +15,7 @@ services:
       - /tmp/bfts-${TEST_RUN_ID}:/docker_scratch/
       - ./bfts_processor/tests/resources:/test-resources/
 
-  # feather_processor:
+  # feather_processor-disabled:
   #   build:
   #     context: .
   #     target: test
