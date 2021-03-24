@@ -28,7 +28,7 @@ try {
   }
 
   node("master") {
-    if(env.BRANCH_NAME == "master") {
+    if(env.BRANCH_NAME == "main") {
       def allProcessors = sh(returnStdout: true, script: 'cat docker-compose*yml | egrep "_(processor|exporter):" | sed \'s/\\://g\' | sed \'s/_/-/g\' | sort | uniq | xargs').split()
 
       stage("Build Image") {
