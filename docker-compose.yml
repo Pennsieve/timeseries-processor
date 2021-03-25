@@ -15,19 +15,19 @@ services:
       - /tmp/bfts-${TEST_RUN_ID}:/docker_scratch/
       - ./bfts_processor/tests/resources:/test-resources/
 
-  feather_processor:
-    build:
-      context: .
-      target: test
-      dockerfile: feather_processor/Dockerfile
-    container_name: feather-processor-test
-    command: ["python", "-m", "pytest", "-s", "-x", "--cov-report=", "--cov=feather_processor", "tests/"]
-    env_file:
-      - feather_processor/test.env
-    image: pennsieve/feather-processor:${IMAGE_TAG}
-    volumes:
-      - /tmp/feather-${TEST_RUN_ID}:/docker_scratch/
-      - ./feather_processor/tests/resources:/test-resources/
+  # feather_processor-disabled:
+  #   build:
+  #     context: .
+  #     target: test
+  #     dockerfile: feather_processor/Dockerfile
+  #   container_name: feather-processor-test
+  #   command: ["python", "-m", "pytest", "-s", "-x", "--cov-report=", "--cov=feather_processor", "tests/"]
+  #   env_file:
+  #     - feather_processor/test.env
+  #   image: pennsieve/feather-processor:${IMAGE_TAG}
+  #   volumes:
+  #     - /tmp/feather-${TEST_RUN_ID}:/docker_scratch/
+  #     - ./feather_processor/tests/resources:/test-resources/
 
   channel_writer_processor:
     build:
