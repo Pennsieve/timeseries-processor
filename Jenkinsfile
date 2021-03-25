@@ -1,6 +1,6 @@
 #!groovy
 try {
-  node('executor') {
+  node("executor") {
     checkout scm
 
     def authorName  = sh(returnStdout: true, script: 'git --no-pager show --format="%an" --no-patch')
@@ -9,13 +9,15 @@ try {
 
     env.IMAGE_TAG = imageTag
     env.AUTHOR_NAME = authorName
-  
-    stage("Test") {
-      withCredentials([usernamePassword(
+
+    def pennsieveNexusCreds = usernamePassword(
         credentialsId: "pennsieve-nexus-ci-login",
         usernameVariable: "PENNSIEVE_NEXUS_USER",
         passwordVariable: "PENNSIEVE_NEXUS_PW"
-      )]) {
+    )
+  
+    stage("Test") {
+      withCredentials([pennsieveNexusCreds]) {
         sh """make test"""
       }
     }
@@ -24,11 +26,7 @@ try {
       def allProcessors = sh(returnStdout: true, script: 'cat docker-compose*yml | egrep "_(processor|exporter):" | sed \'s/\\://g\' | sed \'s/_/-/g\' | sort | uniq | xargs').split()
 
       stage("Build Image") {
-        withCredentials([usernamePassword(
-          credentialsId: "pennsieve-nexus-ci-login",
-          usernameVariable: "PENNSIEVE_NEXUS_USER",
-          passwordVariable: "PENNSIEVE_NEXUS_PW"
-        )]) {
+        withCredentials([pennsieveNexusCreds]) {
           sh "IMAGE_TAG=${env.IMAGE_TAG} make build"
           sh "IMAGE_TAG=latest make build"
         }
