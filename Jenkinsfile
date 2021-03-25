@@ -9,18 +9,26 @@ try {
 
     env.IMAGE_TAG = imageTag
     env.AUTHOR_NAME = authorName
-  
-    stage("Test") {
-      withCredentials([usernamePassword(
-        credentialsId: "pennsieve-nexus-ci-login",
-        usernameVariable: "PENNSIEVE_NEXUS_USER",
-        passwordVariable: "PENNSIEVE_NEXUS_PW"
-      )]) {
-        sh """make test"""
+  }
+
+  node("dev-executor") {
+    ws('timeseries-processor-testing') {
+      checkout scm
+
+      stage("Test") {
+        withCredentials([usernamePassword(
+          credentialsId: "pennsieve-nexus-ci-login",
+          usernameVariable: "PENNSIEVE_NEXUS_USER",
+          passwordVariable: "PENNSIEVE_NEXUS_PW"
+        )]) {
+          sh """make test"""
+        }
       }
     }
-    
-    if (env.BRANCH_NAME == "main") {
+  }
+
+  node("executor") {
+    if(env.BRANCH_NAME == "main") {
       def allProcessors = sh(returnStdout: true, script: 'cat docker-compose*yml | egrep "_(processor|exporter):" | sed \'s/\\://g\' | sed \'s/_/-/g\' | sort | uniq | xargs').split()
 
       stage("Build Image") {
