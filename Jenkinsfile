@@ -1,6 +1,6 @@
 #!groovy
 try {
-  node('master') {
+  node('executor') {
     checkout scm
 
     def authorName  = sh(returnStdout: true, script: 'git --no-pager show --format="%an" --no-patch')
@@ -9,26 +9,18 @@ try {
 
     env.IMAGE_TAG = imageTag
     env.AUTHOR_NAME = authorName
-  }
-
-  node("dev-executor") {
-    ws('timeseries-processor-testing') {
-      checkout scm
-
-      stage("Test") {
-        withCredentials([usernamePassword(
-          credentialsId: "pennsieve-nexus-ci-login",
-          usernameVariable: "PENNSIEVE_NEXUS_USER",
-          passwordVariable: "PENNSIEVE_NEXUS_PW"
-        )]) {
-          sh """make test"""
-        }
+  
+    stage("Test") {
+      withCredentials([usernamePassword(
+        credentialsId: "pennsieve-nexus-ci-login",
+        usernameVariable: "PENNSIEVE_NEXUS_USER",
+        passwordVariable: "PENNSIEVE_NEXUS_PW"
+      )]) {
+        sh """make test"""
       }
     }
-  }
-
-  node("master") {
-    if(env.BRANCH_NAME == "main") {
+    
+    if (env.BRANCH_NAME == "main") {
       def allProcessors = sh(returnStdout: true, script: 'cat docker-compose*yml | egrep "_(processor|exporter):" | sed \'s/\\://g\' | sed \'s/_/-/g\' | sort | uniq | xargs').split()
 
       stage("Build Image") {
