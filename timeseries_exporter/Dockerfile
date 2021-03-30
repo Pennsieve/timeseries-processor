@@ -5,17 +5,18 @@
 FROM pennsieve/base-processor-pandas-test:1-5800e81 as test
 
 RUN apk add --no-cache --update \
-  --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+  --repository=http://dl-cdn.alpinelinux.org/alpine/v3.11/main \
   build-base \
+  gfortran \
   postgresql-dev \
-  lapack \
-  lapack-dev \
-  gfortran
+  libffi
 
 RUN apk add --no-cache --update \
   --repository=http://dl-cdn.alpinelinux.org/alpine/v3.12/community \
   'hdf5' \
-  'hdf5-dev'
+  'hdf5-dev' \
+  lapack \
+  lapack-dev
 
 # install requirements
 COPY timeseries_exporter/requirements.txt /app/
@@ -40,18 +41,17 @@ ENTRYPOINT [""]
 FROM pennsieve/base-processor-pandas-test:1-5800e81 as prod
 
 RUN apk add --no-cache --update \
-  --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+  --repository=http://dl-cdn.alpinelinux.org/alpine/v3.12/main \
   build-base \
-  postgresql-dev \
-  lapack \
-  lapack-dev \
   gfortran \
-  wget
+  postgresql-dev
 
 RUN apk add --no-cache --update \
-    --repository=http://dl-cdn.alpinelinux.org/alpine/v3.12/community/ \
-    hdf5 \
-    hdf5-dev
+  --repository=http://dl-cdn.alpinelinux.org/alpine/v3.12/community \
+  'hdf5' \
+  'hdf5-dev' \
+  lapack \
+  lapack-dev
 
 # Get AWS root cert for securing postgres connections
 RUN mkdir -p /root/.postgresql \
