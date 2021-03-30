@@ -9,11 +9,10 @@ services:
     container_name: bfts-processor
     image: pennsieve/bfts-processor:${IMAGE_TAG}
 
-  # feather_processor:
+  # feather_processor-disabled:
   #   build:
   #     context: .
   #     target: prod
-  #     target: test
   #     dockerfile: feather_processor/Dockerfile
   #   container_name: feather-processor
   #   image: pennsieve/feather-processor:${IMAGE_TAG}
