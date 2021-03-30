@@ -41,10 +41,11 @@ ENTRYPOINT [""]
 FROM pennsieve/base-processor-pandas-test:1-5800e81 as prod
 
 RUN apk add --no-cache --update \
-  --repository=http://dl-cdn.alpinelinux.org/alpine/v3.12/main \
+  --repository=http://dl-cdn.alpinelinux.org/alpine/v3.11/main \
   build-base \
   gfortran \
-  postgresql-dev
+  postgresql-dev \
+  libffi
 
 RUN apk add --no-cache --update \
   --repository=http://dl-cdn.alpinelinux.org/alpine/v3.12/community \
