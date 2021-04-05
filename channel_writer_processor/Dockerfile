@@ -4,7 +4,7 @@
 
 FROM pennsieve/base-processor-pandas-test:1-5800e81 as test
 
-RUN apk add --no-cache --update postgresql-dev
+RUN apk add --no-cache --update postgresql-dev libstdc++
 
 # install requirements
 COPY timeseries_db/requirements.txt /app/
@@ -29,7 +29,7 @@ ENTRYPOINT [""]
 
 FROM pennsieve/base-processor-pandas:1-5800e81 as prod
 
-RUN apk add --no-cache --update build-base postgresql-dev wget
+RUN apk add --no-cache --update build-base postgresql-dev wget  libstdc++
 
 # Get AWS root cert for securing postgres connections
 RUN mkdir -p /root/.postgresql \

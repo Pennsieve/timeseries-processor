@@ -7,6 +7,8 @@ FROM pennsieve/base-processor-pandas-test:1-5800e81 as test-builder
 ARG PENNSIEVE_NEXUS_USER
 ARG PENNSIEVE_NEXUS_PW
 
+RUN apk add --no-cache --update libstdc++
+
 # install requirements
 COPY nex_processor/requirements.txt /app/
 RUN  pip install --no-cache-dir -r /app/requirements.txt
@@ -41,6 +43,8 @@ FROM pennsieve/base-processor-pandas:1-5800e81 as prod-builder
 
 ARG PENNSIEVE_NEXUS_USER
 ARG PENNSIEVE_NEXUS_PW
+
+RUN apk add --no-cache --update libstdc++
 
 # install requirements
 COPY nex_processor/requirements.txt /app/
