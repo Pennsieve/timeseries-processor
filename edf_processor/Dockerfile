@@ -4,6 +4,8 @@
 
 FROM pennsieve/base-processor-pandas-test:1-5800e81 as test
 
+RUN apk add --no-cache --update libstdc++
+
 # install requirements
 COPY edf_processor/requirements.txt /app/
 RUN  pip install --no-cache-dir -r /app/requirements.txt
@@ -25,7 +27,7 @@ ENTRYPOINT [""]
 
 FROM pennsieve/base-processor-pandas:1-5800e81 as prod
 
-RUN apk add --no-cache --update gcc musl-dev
+RUN apk add --no-cache --update gcc musl-dev libstdc++
 
 # install requirements
 COPY edf_processor/requirements.txt /app/
