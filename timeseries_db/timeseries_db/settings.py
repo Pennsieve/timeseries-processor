@@ -11,8 +11,8 @@ class DatabaseSettings(Settings):
 
         env = self.environment
         self._load_values(
-            postgres_db='{}-postgres-db'.format(env),
-            postgres_host='{}-postgres-host'.format(env),
+            postgres_db='{}-data-postgres-db'.format(env),
+            postgres_host='{}-data-postgres-host'.format(env),
             postgres_password='{}-postgres-password'.format(env),
             postgres_port='{}-postgres-port'.format(env),
             postgres_user='{}-postgres-user'.format(env),

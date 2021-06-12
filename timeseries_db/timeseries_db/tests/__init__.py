@@ -8,8 +8,8 @@ from timeseries_db import TimeSeriesDatabase, DatabaseSettings, conn
 
 ssm_ts_values = [
     # timeseries: postgres
-    ('test-postgres-db',      'postgres'),
-    ('test-postgres-host',    'postgres'),
+    ('test-data-postgres-db',      'postgres'),
+    ('test-data-postgres-host',    'postgres'),
     ('test-postgres-password','password'),
     ('test-postgres-port',    '5432'),
     ('test-postgres-user',    'postgres'),
