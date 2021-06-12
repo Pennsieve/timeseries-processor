@@ -8,11 +8,11 @@ from timeseries_db import TimeSeriesDatabase, DatabaseSettings, conn
 
 ssm_ts_values = [
     # timeseries: postgres
-    ('test-pennsieve-postgres-db',      'postgres'),
-    ('test-pennsieve-postgres-host',    'postgres'),
-    ('test-pennsieve-postgres-password','password'),
-    ('test-pennsieve-postgres-port',    '5432'),
-    ('test-pennsieve-postgres-user',    'postgres'),
+    ('test-data-postgres-db',      'postgres'),
+    ('test-data-postgres-host',    'postgres'),
+    ('test-postgres-password','password'),
+    ('test-postgres-port',    '5432'),
+    ('test-postgres-user',    'postgres'),
 
     # timeseries: s3
     ('test-timeseries-s3-bucket', 'timeseries-bucket')

@@ -11,11 +11,11 @@ class DatabaseSettings(Settings):
 
         env = self.environment
         self._load_values(
-            postgres_db='{}-pennsieve-postgres-db'.format(env),
-            postgres_host='{}-pennsieve-postgres-host'.format(env),
-            postgres_password='{}-pennsieve-postgres-password'.format(env),
-            postgres_port='{}-pennsieve-postgres-port'.format(env),
-            postgres_user='{}-pennsieve-postgres-user'.format(env),
+            postgres_db='{}-data-postgres-db'.format(env),
+            postgres_host='{}-data-postgres-host'.format(env),
+            postgres_password='{}-postgres-password'.format(env),
+            postgres_port='{}-postgres-port'.format(env),
+            postgres_user='{}-postgres-user'.format(env),
             s3_bucket_timeseries='{}-timeseries-s3-bucket'.format(env)
         )
 
