@@ -1,4 +1,3 @@
-
 from base_processor.timeseries import BaseTimeSeriesProcessor
 import base_processor.timeseries.utils as utils
 import numpy as np
@@ -10,132 +9,137 @@ import numpy as np
 
 import persyst
 
-def multiply(x,calibration):
+
+def multiply(x, calibration):
     return x * calibration
+
 
 class PersystProcessor(BaseTimeSeriesProcessor):
 
-	def task(self):
-	    '''
-	    Reads Persyst file format, creates channel objects,
-	    and writes data (segment by segment) to TS DB.
+    def task(self):
+        """
+        Reads Persyst file format, creates channel objects,
+        and writes data (segment by segment) to TS DB.
 
-	    NOTE: SampleTimes/segments are in layout file, and represent timepoints of
-	    samples and the current time. The number preceding the equals symbol
-	    represents the number of samples processed since the start of the segment,
-	    and the number following it represents the start time of the segment in
-	    seconds (after midnight).
+        NOTE: SampleTimes/segments are in layout file, and represent timepoints of
+        samples and the current time. The number preceding the equals symbol
+        represents the number of samples processed since the start of the segment,
+        and the number following it represents the start time of the segment in
+        seconds (after midnight).
 
-	    NOTE: In our samples, the testtime header field does not match the time
-	    start time of the first segment (but it does in online examples). So we
-	    interpret start time here as the header start date plus the number of
-	    seconds elapsed since midnight before the first sample.
+        NOTE: In our samples, the testtime header field does not match the time
+        start time of the first segment (but it does in online examples). So we
+        interpret start time here as the header start date plus the number of
+        seconds elapsed since midnight before the first sample.
 
-	    NOTE: To take into account gaps between segments: Segment start times must
-	    be computed by adding the epoch date to the starting timestamp (after
-	    midnight). Segment end times must be computed by dividing samples
-	    processed (from next segment - current segment) by sample rate and adding to the start time.
-	    '''
-	    files = self.inputs.get('file')
+        NOTE: To take into account gaps between segments: Segment start times must
+        be computed by adding the epoch date to the starting timestamp (after
+        midnight). Segment end times must be computed by dividing samples
+        processed (from next segment - current segment) by sample rate and adding to the start time.
+        """
+        self.LOGGER.info('Persyst Task started')
 
-	    # Initialize parser for layout, a .lay configuration file (.ini format)
-	    config = ConfigParser.RawConfigParser(allow_no_value=True)
+        files = self.inputs.get('file')
 
-	    layout_path = persyst.find_lay(config, files)
-	    data_path    = persyst.find_dat(files)
+        # Initialize parser for layout, a .lay configuration file (.ini format)
+        config = ConfigParser.RawConfigParser(allow_no_value=True)
 
-	    # Check if file paths exist
-	    if layout_path == None:
-	        raise Exception('No .lay file provided')
-	    if data_path == None:
-	        raise Exception('No .dat file provided')
+        layout_path = persyst.find_lay(config, files)
+        data_path = persyst.find_dat(files)
 
-	    config.read(layout_path)
+        # Check if file paths exist
+        if layout_path is None:
+            raise Exception('No .lay file provided')
+        if data_path is None:
+            raise Exception('No .dat file provided')
 
-	    # Parse layout file for header properties
-	    header_name = persyst.get_config_section('FileInfo', config)['file']
-	    header_rate = float(persyst.get_config_section('FileInfo', config)['samplingrate'])
-            header_datatype =  int(persyst.get_config_section('FileInfo', config)['datatype'])
-            header_calibration =  float(persyst.get_config_section('FileInfo', config)['calibration'])
+        config.read(layout_path)
 
-            try:
-                header_date = persyst.get_config_section('Patient', config)['testdate']
-	        header_time = persyst.get_config_section('Patient', config)['testtime']
+        # Parse layout file for header properties
+        header_name = persyst.get_config_section('FileInfo', config)['file']
+        header_rate = float(persyst.get_config_section('FileInfo', config)['samplingrate'])
+        header_datatype = int(persyst.get_config_section('FileInfo', config)['datatype'])
+        header_calibration = float(persyst.get_config_section('FileInfo', config)['calibration'])
 
-	        # Compute epoch seconds from given header_date (midnight UTC)
-	        header_epoch = time.mktime(time.strptime(header_date, "%m/%d/%y"))
-            except:
-                header_epoch = 0
+        try:
+            header_date = persyst.get_config_section('Patient', config)['testdate']
+            header_time = persyst.get_config_section('Patient', config)['testtime']
 
-	    # Get channels and channel info
-	    channel_rows = config.items('ChannelMap')
-	    num_channels = len(channel_rows)
+            # Compute epoch seconds from given header_date (midnight UTC)
+            header_epoch = time.mktime(time.strptime(header_date, "%m/%d/%y"))
+        except:
+            header_epoch = 0
 
-	    # Parse EEG binary, a .dat file, into numpy
-            if (header_datatype == 7):
-                precision = 'int32'
-                BYTE_SIZE = 4
-            else:
-                precision='int16'
-                BYTE_SIZE = 2
-	    data_size = os.stat(data_path).st_size  # size of EEG binary in bytes
-	    num_samples = (data_size / num_channels) / BYTE_SIZE
-	    data = np.memmap(data_path, dtype=precision,
-	                     mode='r', shape=(num_channels, num_samples), order='f')
+        # Get channels and channel info
+        channel_rows = config.items('ChannelMap')
+        num_channels = len(channel_rows)
 
-            # Write all channel info (layout + binary data)
-	    for i, channel_tuple in enumerate(channel_rows):
+        # Parse EEG binary, a .dat file, into numpy
+        if header_datatype == 7:
+            precision = 'int32'
+            BYTE_SIZE = 4
+        else:
+            precision = 'int16'
+            BYTE_SIZE = 2
 
-	        # Get EEG data of channel
-	        channel_data = np.array([ multiply(y, header_calibration) for y in data[i]])
+        data_size = os.stat(data_path).st_size  # size of EEG binary in bytes
+        num_samples = (data_size / num_channels) / BYTE_SIZE
+        data = np.memmap(data_path,
+                         dtype=precision,
+                         mode='r',
+                         shape=(num_channels, num_samples),
+                         order='f')
 
-	        # Parse channel name
-	        channel_name = channel_tuple[0]
+        # Write all channel info (layout + binary data)
+        for i, channel_tuple in enumerate(channel_rows):
 
-	        # Get segments
-	        segments = [('0', '0')]
-	        if config.has_section('SampleTimes'):
-	            segments = config.items('SampleTimes')
+            self.LOGGER.debug('Writing Channel: ' + str(i))
 
-	        unit = 'uV'
-	        first_segment_time = persyst.scaled( # initial value for channel start/end
-	            float(segments[0][1]) + header_epoch)
+            # Get EEG data of channel
+            channel_data = np.array([multiply(y, header_calibration) for y in data[i]])
 
-	        # create channel
-	        channel = self.get_or_create_channel(
-	            name = channel_name.strip(),
-	            unit = unit,
-	            rate = header_rate,
-	            type = 'continuous')
+            # Parse channel name
+            channel_name = channel_tuple[0]
 
-	        # Go through segments and write data to channel
-	        for j, segment in enumerate(segments):
+            # Get segments
+            segments = [('0', header_epoch)]
+            if config.has_section('SampleTimes'):
+                segments = config.items('SampleTimes')
 
-	            # Compute segment start and end times (see Note)
-	            segment_start_time = persyst.scaled(header_epoch + float(segment[1]))
+            unit = 'uV'
 
-	            samples_by_segment_start = int(segment[0])
+            # create channel
+            channel = self.get_or_create_channel(
+                name=channel_name.strip(),
+                unit=unit,
+                rate=header_rate,
+                type='continuous')
 
-	            samples_by_segment_end = num_samples if j == (
-	                len(segments) - 1) else int(segments[j + 1][0])
+            # Go through segments and write data to channel
+            for j, segment in enumerate(segments):
+                # Compute segment start and end times (see Note)
+                segment_start_epoch = persyst.scaled(float(segment[1]))
 
-	            segment_end_time = segment_start_time + persyst.scaled(
-	                ((samples_by_segment_end - samples_by_segment_start) / header_rate)
-	            )
+                first_sample_for_segment = int(segment[0])
 
-	            # Update channel start/end time
-	            channel_start = min(first_segment_time, segment_start_time)
-	            channel_end = max(first_segment_time, segment_end_time)
+                first_sample_next_segment = num_samples if j == (
+                        len(segments) - 1) else int(segments[j + 1][0])
 
-	            # get data segment
-	            segment_data = channel_data[samples_by_segment_start:samples_by_segment_end]
+                # get data segment
+                segment_data = channel_data[first_sample_for_segment:first_sample_next_segment]
 
-	            timestamps = np.linspace(channel_start, channel_end, \
-	                num=len(segment_data),endpoint=False)
+                timestamps = (1e6 * (np.arange(0, len(segment_data))/header_rate)) + segment_start_epoch
 
-	            self.write_channel_data(
-	                channel   = channel,
-	                timestamps = timestamps,
-	                values    = segment_data)
+                self.LOGGER.debug('Header Rate: ' + str(header_rate) + ' Sampling rate: ' +
+                                  str( 1000000/((timestamps[10]-timestamps[0])/10) ))
+                self.LOGGER.debug('Length data: ' + str(len(segment_data)) + " Length timestamp: "
+                                  + str(len(timestamps)))
+                self.LOGGER.debug('Writing Segment: ' + str(j) + 'timestamp 1: '
+                                  + str(timestamps[0])+", " + str(timestamps[1]))
 
-	        self.finalize()
+                self.write_channel_data(
+                    channel=channel,
+                    timestamps=timestamps,
+                    values=segment_data)
+
+            self.finalize()

@@ -110,15 +110,15 @@ class ChannelDataWriter(BaseProcessor):
         self.num_values_written += num_written
 
     def write_continuous(self, values, timestamps):
-        '''
+        """
         Write continuous data to the time series database. First identifies
         contiguous segments by finding gaps in the data.
-        '''
+        """
         chunks = list(self.find_chunks(timestamps))
         num_gaps = len(chunks) - 1
         self.num_gaps_found += num_gaps
 
-        for start,end in chunks:
+        for start, end in chunks:
             num_written = self.db.write_continuous(values[start:end], timestamps[start])
             self.num_values_written += num_written
 
@@ -130,11 +130,14 @@ class ChannelDataWriter(BaseProcessor):
             (timestamp_difference) > 2 * sampling_period
 
         '''
-        sampling_rate  = self.get_sampling_rate(timestamps)
-        gap_threshold  = (1.0/sampling_rate)*1e6 * 2
-        boundaries = np.concatenate(([0],np.where(np.diff(timestamps)>gap_threshold)[0]+1, [len(timestamps)]))
+        sampling_rate = self.get_sampling_rate(timestamps)
+        gap_threshold = (1.0/sampling_rate)*1e6 * 2
+
+        boundaries = np.concatenate(
+            ([0], np.where( np.diff(timestamps) > gap_threshold)[0] + 1, [len(timestamps)]))
+
         for i in np.arange(len(boundaries)-1):
-            yield (boundaries[i], boundaries[i+1])
+            yield boundaries[i], boundaries[i + 1]
 
     def get_sampling_rate(self, timestamps):
         """
@@ -174,6 +177,7 @@ class ChannelDataWriter(BaseProcessor):
                 num_samples = data.shape[0]
 
                 for index in np.arange(0, num_samples, CHUNK_SIZE):
+                    print("Write values in channel_writer: " + str(index))
                     index_stop = min(index + CHUNK_SIZE, num_samples)
                     self.LOGGER.info("PROCESSING INDEX start={}, stop={}".format(index, index_stop))
                     timestamps_chunk = data[index:index_stop, 0].astype(np.int64)
