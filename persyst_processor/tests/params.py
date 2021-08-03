@@ -5,6 +5,19 @@ from base_processor.timeseries.tests import TimeSeriesTest
 # -----------------------------
 
 params_global = [
+    TimeSeriesTest(
+        name      = 'persyst-test-HUP',
+        nchannels = 4,
+        template  = False,
+        nsamples  = 325438,
+        result    = 'pass',
+        rate      = 250,
+        inputs    = {
+            'file': [
+                '/test-resources/HUP1234_2000_02.dat',
+                '/test-resources/HUP1234_2000_02.lay'
+            ]
+        }),
   TimeSeriesTest(
     name      = 'persyst-test-3',
     nchannels = 2,
