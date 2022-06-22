@@ -8,4 +8,4 @@ python-dateutil==2.6.1
 s3transfer==0.1.13
 six==1.11.0
 pandas==0.22.0
-numpy==1.14.0
+numpy==1.22.0
