@@ -31,9 +31,8 @@ FROM pennsieve/base-processor-pandas:1-5800e81 as prod
 
 RUN apk add --no-cache --update build-base postgresql-dev wget  libstdc++
 
-# Get AWS root cert for securing postgres connections
-RUN mkdir -p /root/.postgresql \
-  && wget -qO /root/.postgresql/root.crt https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem
+# Get AWS root CA certificate for securing postgres connections with TLS
+ADD https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem /root/.postgresql/root.crt
 
 # install requirements
 COPY timeseries_db/requirements.txt /app/
